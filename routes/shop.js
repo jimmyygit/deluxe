@@ -10,6 +10,7 @@ router.get("/", (req, res, next) => {
   res.render("shop", {
     pageTitle: "Product",
     products: adminData.products,
+    path: "/",
   });
 });
 

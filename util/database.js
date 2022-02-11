@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+const Sequelize = require("sequelize").Sequelize;
 
 const sequelize = new Sequelize(
   "node-complete",
@@ -7,6 +7,7 @@ const sequelize = new Sequelize(
   {
     dialect: "mysql",
     host: "localhost",
+    logging: false,
   }
 );
 

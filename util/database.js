@@ -8,7 +8,7 @@ const mongoConnect = (cb) => {
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.02xhr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
   )
     .then((client) => {
-      console.log("Connected!");
+      console.log("DB Connected!");
       db = client.db();
       cb();
     })

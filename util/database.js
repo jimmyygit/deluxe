@@ -1,14 +1,29 @@
-const Sequelize = require("sequelize").Sequelize;
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
 
-const sequelize = new Sequelize(
-  "node-complete",
-  "root",
-  process.env.DB_PASSWORD,
-  {
-    dialect: "mysql",
-    host: "localhost",
-    logging: false,
+let db;
+
+const mongoConnect = (cb) => {
+  MongoClient.connect(
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.02xhr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+  )
+    .then((client) => {
+      console.log("Connected!");
+      db = client.db();
+      cb();
+    })
+    .catch((err) => {
+      console.log(err);
+      throw err;
+    });
+};
+
+const getDb = () => {
+  if (db) {
+    return db;
   }
-);
+  throw "No database";
+};
 
-module.exports = sequelize;
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;

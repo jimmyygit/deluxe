@@ -13,14 +13,13 @@ exports.postAddProducts = (req, res, next) => {
   const price = req.body.price;
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
-  const product = new Product(
-    title,
-    price,
-    imageUrl,
-    description,
-    null,
-    req.user._id
-  );
+  const product = new Product({
+    title: title,
+    price: price,
+    imageUrl: imageUrl,
+    description: description,
+    userId: req.user, // mongoose will pick out ._id
+  });
   product
     .save()
     .then((result) => {
@@ -38,7 +37,7 @@ exports.getEditProduct = (req, res, next) => {
   const prodId = req.params.productId;
   // req.user
   //   .getProducts({ where: { id: prodId } })
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then((product) => {
       if (!product) {
         console.log("Product not found!");
@@ -60,24 +59,25 @@ exports.postEditProduct = (req, res, next) => {
   const updatedPrice = req.body.price;
   const updatedImageUrl = req.body.imageUrl;
   const updatedDescription = req.body.description;
-  const product = new Product(
-    updatedTitle,
-    updatedPrice,
-    updatedImageUrl,
-    updatedDescription,
-    prodId
-  );
-  product
-    .save()
+  Product.findById(prodId)
+    .then((product) => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.imageUrl = updatedImageUrl;
+      product.description = updatedDescription;
+      return product.save();
+    })
     .then((result) => {
       console.log("Updated Product");
       res.redirect("/admin/products");
     })
-    .then((err) => console.log(err));
+    .catch((err) => console.log("aa", err));
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
+    // .select("price")
+    // .populate("userId")
     .then((products) => {
       res.render("admin/product-list", {
         pageTitle: "Admin Products",
@@ -90,7 +90,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteByPk(prodId)
+  Product.findByIdAndRemove(prodId)
     .then((result) => {
       console.log("Delete Product");
       res.redirect("/admin/products");

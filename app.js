@@ -5,8 +5,15 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+
+const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.02xhr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const app = express();
+const store = MongoDBStore({
+  uri: MONGODB_URI,
+  collection: "sessions",
+});
 
 const errorController = require("./controllers/error");
 const mongoConnect = require("./util/Ddatabase").mongoConnect;
@@ -26,11 +33,13 @@ app.use(
     secret: "this is a long string",
     resave: false,
     saveUninitialized: false,
+    store: store,
   })
 );
 
 app.use((req, res, next) => {
-  User.findById("621058b637f8103ee98d0bed")
+  if (!req.session.user) return next();
+  User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
       next();
@@ -45,9 +54,7 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 mongoose
-  .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.02xhr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
-  )
+  .connect(MONGODB_URI)
   .then((result) => {
     User.findOne().then((user) => {
       if (!user) {

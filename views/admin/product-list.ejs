@@ -21,6 +21,7 @@
         >
         <form action="/admin/delete-product" method="POST">
           <input type="hidden" value="<%= product._id %>" name="productId" />
+          <%- include('../includes/csrf.ejs') %>
           <button class="btn" type="submit">Delete</button>
         </form>
       </div>

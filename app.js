@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const csrf = require("csurf");
 
 const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.02xhr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
@@ -14,10 +15,11 @@ const store = MongoDBStore({
   uri: MONGODB_URI,
   collection: "sessions",
 });
+const csrfProtection = csrf();
 
 const errorController = require("./controllers/error");
 const mongoConnect = require("./util/Ddatabase").mongoConnect;
-const isAuth = require('./middleware/is-auth')
+const isAuth = require("./middleware/is-auth");
 const User = require("./models/user");
 
 const adminRoutes = require("./routes/admin");
@@ -37,6 +39,7 @@ app.use(
     store: store,
   })
 );
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
   if (!req.session.user) return next();
@@ -46,6 +49,12 @@ app.use((req, res, next) => {
       next();
     })
     .catch((err) => console.log(err));
+});
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isAuthenticated;
+  res.locals.csrfToken = req.csrfToken();
+  next();
 });
 
 app.use("/admin", isAuth, adminRoutes);

@@ -17,6 +17,7 @@ const store = MongoDBStore({
 
 const errorController = require("./controllers/error");
 const mongoConnect = require("./util/Ddatabase").mongoConnect;
+const isAuth = require('./middleware/is-auth')
 const User = require("./models/user");
 
 const adminRoutes = require("./routes/admin");
@@ -47,7 +48,7 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-app.use("/admin", adminRoutes);
+app.use("/admin", isAuth, adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
@@ -56,16 +57,6 @@ app.use(errorController.get404);
 mongoose
   .connect(MONGODB_URI)
   .then((result) => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "bob joen",
-          email: "male@mail.com",
-          cart: { items: [] },
-        });
-        user.save();
-      }
-    });
     app.listen(3000);
   })
   .catch((err) => console.log(err));

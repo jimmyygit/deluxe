@@ -15,7 +15,6 @@ router.post(
     body("title", "Title must have at least 3 characters")
       .isLength({ min: 3 })
       .trim(),
-    body("imageUrl", "Image URL must be valid URL").isURL(),
     body("price", "Price must be floating point number").isFloat(),
     body("description")
       .isLength({ min: 3 })
@@ -35,7 +34,6 @@ router.post(
     body("title", "Title must have at least 3 characters")
       .isLength({ min: 3 })
       .trim(),
-    body("imageUrl", "Image URL must be valid URL").isURL(),
     body("price", "Price must be floating point number").isFloat(),
     body("description")
       .isLength({ min: 3 })

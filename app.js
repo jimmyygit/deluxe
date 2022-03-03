@@ -24,7 +24,9 @@ const fileStorage = multer.diskStorage({
     cb(null, "images");
   },
   filename: (req, file, cb) => {
-    cb(null, `${new Date().toISOString().replace(':', '')}-${file.originalname}`);
+    const uid = new Date().toISOString().replace(/:/g, "");
+    const imagePath = `${uid}-${file.originalname}`;
+    cb(null, imagePath);
   },
 });
 
@@ -57,7 +59,7 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
 app.use(express.static(path.join(__dirname, "public")));
-app.use('/images', express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(
   session({
     secret: "this is a long string",

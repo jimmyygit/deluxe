@@ -22,7 +22,9 @@
     </article>
     <% } %>
   </div>
-  <% } else { %>
+  <%- include('../includes/pagination.ejs', {currentPage: currentPage, nextPage:
+  nextPage, previousPage: previousPage, hasNextPage: hasNextPage,
+  hasPreviousPage: hasPreviousPage, lastPage: lastPage}) %> <% } else { %>
   <h1>No Products!</h1>
   <% } %>
 </main>

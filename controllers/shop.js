@@ -6,25 +6,59 @@ const PDFDocument = require("pdfkit");
 const Product = require("../models/product");
 const Order = require("../models/Order");
 
+const ITEMS_PER_PAGE = 2;
+
 exports.getIndex = (req, res, next) => {
+  const page = +req.query.page || 1;
+  let totalItems;
+
   Product.find()
+    .countDocuments()
+    .then((numProducts) => {
+      totalItems = numProducts;
+      return Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
     .then((products) => {
       res.render("shop/index", {
         pageTitle: "Shop",
         products: products,
         path: "/",
+        currentPage: page,
+        hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
       });
     })
     .catch((err) => console.log(err));
 };
 
 exports.getProducts = (req, res, next) => {
+  const page = +req.query.page || 1;
+  let totalItems;
+
   Product.find()
+    .countDocuments()
+    .then((numProducts) => {
+      totalItems = numProducts;
+      return Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
     .then((products) => {
       res.render("shop/product-list", {
         pageTitle: "All Products",
         products: products,
         path: "/products",
+        currentPage: page,
+        hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
       });
     })
     .catch((err) => console.log(err));
@@ -152,9 +186,11 @@ exports.getInvoice = (req, res, next) => {
       let totalPrice = 0;
       order.products.forEach((prod) => {
         totalPrice += prod.quantity * prod.product.price;
-        pdfDoc.fontSize(14).text(
-          `${prod.product.title} - ${prod.quantity} x $${prod.product.price}`
-        );
+        pdfDoc
+          .fontSize(14)
+          .text(
+            `${prod.product.title} - ${prod.quantity} x $${prod.product.price}`
+          );
       });
       pdfDoc.text(`Total Price: ${totalPrice}`);
 

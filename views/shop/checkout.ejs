@@ -1,2 +1,18 @@
-<%- include('../includes/head.ejs') %> <%- include('../includes/nav.ejs') %> <%-
-include('../includes/end.ejs') %>
+<%- include('../includes/head.ejs') %> <%- include('../includes/nav.ejs') %>
+
+<main>
+  <% if (products.length > 0) { %>
+  <ul class="cart__item-list">
+    <% products.forEach(p => { %>
+    <li class="cart__item">
+      <h1><%= p.productId.title %></h1>
+      <h2>Quantity: <%= p.quantity %></h2>
+    </li>
+    <% }) %>
+  </ul>
+  <div class="centered">
+    <h2>Total: <%= total %></h2>
+  </div>
+  <% } %>
+</main>
+<%- include('../includes/end.ejs') %>

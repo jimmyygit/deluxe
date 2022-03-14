@@ -9,6 +9,8 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const multer = require("multer");
+const helmet = require("helmet");
+const compression = require("compression");
 
 const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.02xhr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
@@ -53,6 +55,9 @@ const authRoutes = require("./routes/auth");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
+
+app.use(helmet());
+app.use(compression());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(

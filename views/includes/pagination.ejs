@@ -8,6 +8,6 @@
   <% if (hasNextPage) { %>
   <a href="?page=<%= nextPage %>"><%= nextPage %></a>
   <% } %> <% if (currentPage !== lastPage && nextPage !== lastPage) { %>
-  <a href="?page=<=% lastPage %>"><%= lastPage %></a>
+  <a href="?page=<%= lastPage %>"><%= lastPage %></a>
   <% } %>
 </section>

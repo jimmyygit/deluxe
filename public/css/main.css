@@ -39,8 +39,8 @@ form {
 .main-header {
   width: 100%;
   height: 3.5rem;
+  padding: 0 1rem;
   background-color: var(--main-blue);
-  padding: 0 1.5rem;
   display: flex;
   align-items: center;
 }
@@ -48,6 +48,9 @@ form {
 .main-header__nav {
   height: 100%;
   width: 100%;
+  background-color: var(--main-blue);
+  padding: 0 1.5rem;
+  border-radius: 5rem;
   display: none;
   align-items: center;
   justify-content: space-between;
@@ -58,6 +61,7 @@ form {
   margin: 0;
   padding: 0;
   display: flex;
+  align-items: center;
 }
 
 .main-header__item {
@@ -93,7 +97,7 @@ form {
   top: 0;
   background: white;
   z-index: 10;
-  padding: 2rem 1rem 1rem 2rem;
+  padding: 2rem 1rem;
   transform: translateX(-100%);
   transition: transform 0.3s ease-out;
 }
@@ -111,7 +115,7 @@ form {
 }
 
 .mobile-nav__item {
-  margin: 1rem;
+  margin: 1rem 0;
   padding: 0;
 }
 
@@ -134,7 +138,7 @@ form {
 .mobile-nav__item button:active {
   background: var(--main-blue);
   color: white;
-  border-radius: 3px;
+  border-radius: 5rem;
 }
 
 #side-menu-toggle {
@@ -276,6 +280,11 @@ form {
 }
 
 @media (min-width: 768px) {
+  .main-header {
+    margin-top: 0.5rem;
+    background-color: white;
+  }
+
   .main-header__nav {
     display: flex;
   }

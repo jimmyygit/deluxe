@@ -267,6 +267,7 @@ form {
   text-decoration: none;
   color: var(--main-blue);
   padding: 0.5rem;
+  border-radius: 0.2rem;
   font-weight: bold;
   border: 1px solid var(--main-blue);
   margin: 0 1rem;

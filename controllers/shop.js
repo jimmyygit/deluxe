@@ -5,6 +5,7 @@ const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 const PDFDocument = require("pdfkit");
 
 const Product = require("../models/product");
+const Order = require("../models/order");
 
 const ITEMS_PER_PAGE = 9;
 
